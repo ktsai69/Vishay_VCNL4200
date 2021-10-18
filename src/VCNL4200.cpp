@@ -143,12 +143,7 @@ int VCNL4200Class::read_ALS(void)
   return read(VCNL4200_REG_ALS_DATA);
 }
 
-int VCNL4200Class::read_WHITE(void)
-{
-  return read(VCNL4200_REG_WHITE_DATA);
-}
-
-float VCNL4200Class::read_lux(void)
+float VCNL4200Class::get_lux(void)
 {
   int als;
   float lux;
@@ -170,7 +165,7 @@ float VCNL4200Class::read_lux(void)
     lux *= lens_factor;
     return lux;
   }
-  return als;
+  return (float)als;
 }
 
 VCNL4200Class vcnl4200(Wire);

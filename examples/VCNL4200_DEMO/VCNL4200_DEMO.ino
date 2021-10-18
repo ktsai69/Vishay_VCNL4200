@@ -19,27 +19,31 @@
 
 #include <Vishay_VCNL4200.h>
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   while (!Serial);
   Serial.println();
 
-  if (!vcnl4200.begin()) {
+  if (!vcnl4200.begin())
+  {
     Serial.println("Failed to initialize vcnl4200");
     while(1);
   }
   Serial.println("PRX\tLux");
 }
 
-void loop() {
-  int prx;
-  float lux;
-  if ((prx=vcnl4200.read_PRX()) >= 0)
+void loop()
+{
+  int prx = vcnl4200.read_PRX();
+  float lux = vcnl4200.get_lux();
+
+  if (prx >= 0 && lux >= 0)
+  {
     Serial.print(prx);
-  Serial.print('\t');
-  if ((lux=vcnl4200.read_lux()) >= 0)
-    Serial.print(lux);
-  Serial.println();
+    Serial.print('\t');
+    Serial.println(lux);
+  }
 
   delay(500);
 }

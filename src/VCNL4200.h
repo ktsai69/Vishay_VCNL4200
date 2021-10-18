@@ -31,8 +31,7 @@ class VCNL4200Class {
     int write( uint8_t reg, uint16_t data);
     virtual int read_PRX(void);
     virtual int read_ALS(void);
-    virtual int read_WHITE(void);
-    virtual float read_lux(void);
+    virtual float get_lux(void);
     float lens_factor;
 
   private:
