@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map For Vishay_VCNL4200
+####################################### 
+# Class
+#######################################
+
+Vishay_VCNL4200	KEYWORD1
+VCNL4200	KEYWORD1
+vcnl4200	KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+begin	KEYWORD2
+end	KEYWORD2
+
+read_PRX	KEYWORD2
+read_ALS	KEYWORD2
+get_lux	KEYWORD2
+
+#######################################
+# Constants
+#######################################
+lens_factor	LITERAL1
