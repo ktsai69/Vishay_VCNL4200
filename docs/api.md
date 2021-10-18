@@ -100,7 +100,7 @@ Positive or zero on success, negative on failure.
 #### Example
 
 ```
-int prx = vcnl4200.read_PRX();
+long prx = vcnl4200.read_PRX();
 
 if (prx >= 0)
     Serial.print(prx);
@@ -137,7 +137,7 @@ Positive or zero on success, negative on failure.
 #### Example
 
 ```
-int als = vcnl4200.read_ALS();
+long als = vcnl4200.read_ALS();
 
 if (als >= 0)
     Serial.print(als);

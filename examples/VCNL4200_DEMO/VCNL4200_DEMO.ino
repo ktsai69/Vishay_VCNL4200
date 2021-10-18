@@ -35,7 +35,7 @@ void setup()
 
 void loop()
 {
-  int prx = vcnl4200.read_PRX();
+  long prx = vcnl4200.read_PRX();
   float lux = vcnl4200.get_lux();
 
   if (prx >= 0 && lux >= 0)

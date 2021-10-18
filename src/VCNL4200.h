@@ -27,10 +27,10 @@ class VCNL4200Class {
 
     int begin();
     void end();
-    int read( uint8_t reg);
+    long read( uint8_t reg);
     int write( uint8_t reg, uint16_t data);
-    virtual int read_PRX(void);
-    virtual int read_ALS(void);
+    virtual long read_PRX(void);
+    virtual long read_ALS(void);
     virtual float get_lux(void);
     float lens_factor;
 

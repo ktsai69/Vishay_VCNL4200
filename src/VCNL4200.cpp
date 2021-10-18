@@ -92,7 +92,7 @@ VCNL4200Class::begin()
   return 1;
 }
 
-int VCNL4200Class::read(uint8_t reg)
+long VCNL4200Class::read(uint8_t reg)
 {
   uint8_t   wd;
   uint16_t  data;
@@ -133,22 +133,22 @@ int VCNL4200Class::write(uint8_t reg, uint16_t data)
   return status;
 }
 
-int VCNL4200Class::read_PRX(void)
+long VCNL4200Class::read_PRX(void)
 {
   return read(VCNL4200_REG_PRX_DATA);
 }
 
-int VCNL4200Class::read_ALS(void)
+long VCNL4200Class::read_ALS(void)
 {
   return read(VCNL4200_REG_ALS_DATA);
 }
 
 float VCNL4200Class::get_lux(void)
 {
-  int als;
+  long als;
   float lux;
   float resolution[] = {0.024f, 0.012f, 0.006f, 0.003f};
-  int als_conf = read(VCNL4200_REG_ALS_CONF);
+  long als_conf = read(VCNL4200_REG_ALS_CONF);
   uint16_t als_it = 0x0000;
   if (als_conf >= 0)
   {
