@@ -74,7 +74,7 @@ VCNL4200Class::begin()
   _wire->begin();
   slaveAddress = VCNL4200_ADDRESS;
   
-  int id = read(VCNL4200_REG_ID);
+  long id = read(VCNL4200_REG_ID);
   if (id < 0 || (id & 0xFF) != VCNL4200_WHO_AM_I)
 	  return 0;
   
