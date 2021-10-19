@@ -35,14 +35,13 @@ void setup()
 
 void loop()
 {
-  long prx = vcnl4200.read_PRX();
-  float lux = vcnl4200.get_lux();
+  uint16_t prx;
 
-  if (prx >= 0 && lux >= 0)
+  if (vcnl4200.read_PRX(&prx))
   {
     Serial.print(prx);
     Serial.print('\t');
-    Serial.println(lux);
+    Serial.println(vcnl4200.get_lux());
   }
 
   delay(500);

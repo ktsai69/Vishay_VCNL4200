@@ -86,23 +86,23 @@ Read the vcnl4200's Proximity sensor.
 #### Syntax 
 
 ```
-vcnl4200.read_PRX()
+boolean vcnl4200.read_PRX(uint16_t *prx)
 ```
 
 #### Parameters
 
-None.
+prx - point of uint16_t for proximity count.
 
 #### Returns
 
-Positive or zero on success, negative on failure.
+true on success, false on failure.
 
 #### Example
 
 ```
-long prx = vcnl4200.read_PRX();
+uint16_t prx;
 
-if (prx >= 0)
+if (vcnl4200.read_PRX(&prx))
     Serial.print(prx);
 
 ```
@@ -123,23 +123,23 @@ Read the vcnl4200's Ambient Light sensor.
 #### Syntax 
 
 ```
-vcnl4200.read_ALS()
+boolean vcnl4200.read_ALS(uint16_t *als)
 ```
 
 #### Parameters
 
-None.
+als - point of uint16_t for ambient light count.
 
 #### Returns
 
-Positive or zero on success, negative on failure.
+true on success, false on failure.
 
 #### Example
 
 ```
-long als = vcnl4200.read_ALS();
+uint16_t als;
 
-if (als >= 0)
+if (vcnl4200.read_ALS(&als))
     Serial.print(als);
 
 ```
@@ -155,12 +155,12 @@ if (als >= 0)
 
 ### `get_lux()`
 
-Read the vcnl4200's Ambient Lioght sensor and convert to lux. 
+Read the vcnl4200's Ambient Lioght sensor and report to lux. 
 
 #### Syntax 
 
 ```
-vcnl4200.get_lux()
+float vcnl4200.get_lux()
 ```
 
 #### Parameters
@@ -197,7 +197,7 @@ Lens Factor for customerize material effect.
 #### Syntax 
 
 ```
-vcnl4200.lens_factor
+float vcnl4200.lens_factor
 ```
 
 #### Parameters

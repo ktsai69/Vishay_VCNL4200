@@ -33,15 +33,16 @@
 #define VCNL4200_REG_PRX_DATA       0x08
 #define VCNL4200_REG_ALS_DATA       0x09
 #define VCNL4200_REG_WHITE_DATA     0x0A
+#define VCNL4200_REG_INT_FLAG       0x0D
 #define VCNL4200_REG_ID             0x0E
 
+// ALS_CONF
 #define VCNL4200_ALS_IT_SHIFT       6
 #define VCNL4200_ALS_IT_MASK        (0x3 << VCNL4200_ALS_IT_SHIFT)
 #define VCNL4200_ALS_IT_50MS        (0x0 << VCNL4200_ALS_IT_SHIFT)
 #define VCNL4200_ALS_IT_100MS       (0x1 << VCNL4200_ALS_IT_SHIFT)
 #define VCNL4200_ALS_IT_200MS       (0x2 << VCNL4200_ALS_IT_SHIFT)
 #define VCNL4200_ALS_IT_400MS       (0x3 << VCNL4200_ALS_IT_SHIFT)
-
 #define VCNL4200_PRX_IT_SHIFT       1
 #define VCNL4200_PRX_IT_MASK        (0x7 << VCNL4200_PRX_IT_SHIFT)
 #define VCNL4200_PRX_IT_1T          (0x0 << VCNL4200_PRX_IT_SHIFT)
@@ -50,12 +51,25 @@
 #define VCNL4200_PRX_IT_4T          (0x3 << VCNL4200_PRX_IT_SHIFT)
 #define VCNL4200_PRX_IT_8T          (0x4 << VCNL4200_PRX_IT_SHIFT)
 #define VCNL4200_PRX_IT_9T          (0x5 << VCNL4200_PRX_IT_SHIFT)
-
+#define VCNL4200_PRX_HD             (1 << 11)
+// PRX_CONF
+#define VCNL4200_PRX_SC_EN          (1 << 0)
+#define VCNL4200_PRX_SC_ADV         (1 << 1)
+#define VCNL4200_PRX_MPS_SHIFT      5
+#define VCNL4200_PRX_MPS_MASK       (0x03 << VCNL4200_PRX_MPS_SHIFT)
+#define VCNL4200_PRX_MPS_1P         (0x0 << VCNL4200_PRX_MPS_SHIFT)
+#define VCNL4200_PRX_MPS_2P         (0x1 << VCNL4200_PRX_MPS_SHIFT)
+#define VCNL4200_PRX_MPS_4P         (0x2 << VCNL4200_PRX_MPS_SHIFT)
+#define VCNL4200_PRX_MPS_8P         (0x3 << VCNL4200_PRX_MPS_SHIFT)
+// PRX_CONF3
 #define VCNL4200_DEFAULT_ALS_CONF   (VCNL4200_ALS_IT_100MS)
 #define VCNL4200_DEFAULT_ALS_THDH   0xFFFF
 #define VCNL4200_DEFAULT_ALS_THDL   0x0000
-#define VCNL4200_DEFAULT_PRX_CONF   (VCNL4200_PRX_IT_2T)
-#define VCNL4200_DEFAULT_PRX_CONF3  0x0000
+#define VCNL4200_DEFAULT_PRX_CONF   (VCNL4200_PRX_IT_4T | \
+                                     VCNL4200_PRX_HD)
+#define VCNL4200_DEFAULT_PRX_CONF3  (VCNL4200_PRX_SC_EN | \
+                                     VCNL4200_PRX_SC_ADV | \
+                                     VCNL4200_PRX_MPS_2P)
 #define VCNL4200_DEFAULT_PRX_CANC   0x0000
 #define VCNL4200_DEFAULT_PRX_THDL   0x0000
 #define VCNL4200_DEFAULT_PRX_THDH   0xFFFF
@@ -73,11 +87,15 @@ VCNL4200Class::begin()
 {
   _wire->begin();
   slaveAddress = VCNL4200_ADDRESS;
+
+  // Prevent I2C bus lockup
+  write(VCNL4200_REG_ALS_THDL, 0x0);
+  write(VCNL4200_REG_ALS_THDL, 0x0);
   
-  long id = read(VCNL4200_REG_ID);
-  if (id < 0 || (id & 0xFF) != VCNL4200_WHO_AM_I)
+  uint16_t id;
+  if (!read(VCNL4200_REG_ID, &id) || (id & 0xFF) != VCNL4200_WHO_AM_I)
 	  return 0;
-  
+
   // Initialization
   write(VCNL4200_REG_ALS_CONF, VCNL4200_DEFAULT_ALS_CONF);
   write(VCNL4200_REG_ALS_THDH, VCNL4200_DEFAULT_ALS_THDH);
@@ -92,10 +110,9 @@ VCNL4200Class::begin()
   return 1;
 }
 
-long VCNL4200Class::read(uint8_t reg)
+boolean VCNL4200Class::read(uint8_t reg, uint16_t *data)
 {
   uint8_t   wd;
-  uint16_t  data;
 
   _wire->beginTransmission(slaveAddress);
   if (_wire->write (reg) != 1)
@@ -110,62 +127,56 @@ long VCNL4200Class::read(uint8_t reg)
   if (!wd)
     goto read_error;
   
-  data = _wire->read();
-  data |= _wire->read() << 8;
-  return data;
+  *data = _wire->read();
+  *data |= _wire->read() << 8;
+  return true;
 
 read_error:
   _wire->endTransmission(true);
-  return -1;
+  return false;
 }
 
-int VCNL4200Class::write(uint8_t reg, uint16_t data)
+boolean VCNL4200Class::write(uint8_t reg, uint16_t data)
 {
-  int status = 1;
+  boolean status = true;
   
   _wire->beginTransmission(slaveAddress);
   if ((_wire->write(reg) == 1) &&
       (_wire->write((uint8_t)(data & 0xFF)) == 1) &&
       (_wire->write((uint8_t)((data >> 8) & 0xFF)) == 1))
-      status = -1;
+      status = false;
   _wire->endTransmission(true);
 
   return status;
 }
 
-long VCNL4200Class::read_PRX(void)
+boolean VCNL4200Class::read_PRX(uint16_t *prx)
 {
-  return read(VCNL4200_REG_PRX_DATA);
+  return read(VCNL4200_REG_PRX_DATA, prx);
 }
 
-long VCNL4200Class::read_ALS(void)
+boolean VCNL4200Class::read_ALS(uint16_t *als)
 {
-  return read(VCNL4200_REG_ALS_DATA);
+  return read(VCNL4200_REG_ALS_DATA, als);
 }
 
 float VCNL4200Class::get_lux(void)
 {
-  long als;
+  uint16_t als;
+  uint16_t als_conf;
+  uint16_t als_it;
   float lux;
   float resolution[] = {0.024f, 0.012f, 0.006f, 0.003f};
-  long als_conf = read(VCNL4200_REG_ALS_CONF);
-  uint16_t als_it = 0x0000;
-  if (als_conf >= 0)
-  {
-    als_it = (uint16_t)als_conf;
-    als_it &= VCNL4200_ALS_IT_MASK;
-    als_it >>= VCNL4200_ALS_IT_SHIFT;
-  }
+
+  if (!read(VCNL4200_REG_ALS_CONF, &als_conf) || !read_ALS(&als))
+    return -1.0f;
     
-  als = read_ALS();
-  if (als >= 0)
-  {
-    lux = (float)als;
-    lux *= resolution[als_it];
-    lux *= lens_factor;
-    return lux;
-  }
-  return (float)als;
+  als_it = (als_conf & VCNL4200_ALS_IT_MASK) >> VCNL4200_ALS_IT_SHIFT;
+    
+  lux = (float)als;
+  lux *= resolution[als_it];
+  lux *= lens_factor;
+  return lux;
 }
 
 VCNL4200Class vcnl4200(Wire);
