@@ -138,13 +138,13 @@ read_error:
 
 boolean VCNL4200Class::write(uint8_t reg, uint16_t data)
 {
-  boolean status = true;
+  boolean status = false;
   
   _wire->beginTransmission(slaveAddress);
   if ((_wire->write(reg) == 1) &&
       (_wire->write((uint8_t)(data & 0xFF)) == 1) &&
       (_wire->write((uint8_t)((data >> 8) & 0xFF)) == 1))
-      status = false;
+      status = true;
   _wire->endTransmission(true);
 
   return status;
