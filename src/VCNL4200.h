@@ -36,7 +36,8 @@ class VCNL4200Class {
 
   private:
     TwoWire* _wire;
-    uint8_t slaveAddress;  
+    uint8_t slaveAddress;
+    boolean bitsUpdate(uint8_t reg, uint16_t mask, uint16_t update);  
 };
 
 extern VCNL4200Class vcnl4200;

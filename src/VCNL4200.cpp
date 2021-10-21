@@ -142,13 +142,24 @@ boolean VCNL4200Class::write(uint8_t reg, uint16_t data)
   boolean status = false;
   
   _wire->beginTransmission(slaveAddress);
-  if ((_wire->write(reg) == 1) &&
-      (_wire->write((uint8_t)(data & 0xFF)) == 1) &&
-      (_wire->write((uint8_t)((data >> 8) & 0xFF)) == 1))
-      status = true;
+  if (_wire->write(reg) &&
+      _wire->write((uint8_t)(data & 0xFF)) &&
+      _wire->write((uint8_t)((data >> 8) & 0xFF)))
+    status = true;
   _wire->endTransmission(true);
 
   return status;
+}
+
+boolean VCNL4200Class::bitsUpdate(uint8_t reg, uint16_t mask, uint16_t update)
+{
+  uint16_t value;
+  
+  if (!read(reg, &value))
+    return false;
+  value &= mask;
+  value |= update;
+  return write(reg, value);
 }
 
 boolean VCNL4200Class::read_PRX(uint16_t *prx)
