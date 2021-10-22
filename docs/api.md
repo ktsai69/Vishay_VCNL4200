@@ -401,11 +401,7 @@ boolean vcnl4200.PRX_INT(VCNL4200Sensor prx_int)
 
 #### Parameters
 
-prx_int - one of the followings:
-			PRX_INT_DISABLE
-			PRX_INT_CLOSING
-			PRX_INT_AWAY
-			PRX_INT_BOTH
+prx_int - one of the followings: PRX_INT_DISABLE, PRX_INT_CLOSING, PRX_INT_AWAY, PRX_INT_BOTH
 
 #### Returns
 
