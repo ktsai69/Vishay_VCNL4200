@@ -42,7 +42,7 @@ if (!vcnl4200.begin()) {
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `end()`
@@ -90,7 +90,7 @@ vcnl4200.end();
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `read_PRX()`
@@ -134,7 +134,7 @@ if (vcnl4200.read_PRX(&prx))
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `read_ALS()`
@@ -178,7 +178,7 @@ if (vcnl4200.read_ALS(&als))
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `get_lux()`
@@ -222,7 +222,7 @@ if (lux >= 0)
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `ALS_SD()`
@@ -263,7 +263,7 @@ vcnl4200.ALS_SD(false);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `ALS_INT_EN()`
@@ -304,7 +304,7 @@ vcnl4200.ALS_INT_EN(true);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `ALS_INT_with_threshold()`
@@ -345,61 +345,7 @@ vcnl4200.ALS_INT_with_threshold(3.0f);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
-* [lens_factor](#lens_factor)
-
-### `clean_INT()`
-
-Clean interrupt for VCNL4200.
-
-#### Syntax 
-
-```
-VCNL4200Sensor VCNL4200Sensor vcnl4200.clean_INT()
-```
-
-#### Parameters
-
-None.
-
-#### Returns
-
-ALS for interrupt from Ambient Light, PRX for interrupt from PRX, ALSPRX for both generated interrupt, None for not from  VCNL4200.
-
-#### Example
-
-```
-switch (vcnl4200.clean_INT())
-{
-  case ALS:
-	Serial.println("Interrupt from ALS.");
-	vcnl4200.ALS_INT_with_threshold(1.0f);		// Re-set +/- 1.0% threshold
-	break;
-  case PRX:
-	Serial.println("Interrupt from PRX.");
-	break;
-  case ALSPRX:
-	Serial.println("Interrupt from both ALS and PRX.");
-	break;
-  default:
-	break;
-}
-```
-
-#### See also
-
-* [begin()](#begin)
-* [end()](#end)
-* [read_PRX()](#read_PRX)
-* [read_ALS()](#read_ALS)
-* [get_lux()](#get_lux)
-* [ALS_SD()](#ALS_SD)
-* [ALS_INT_EN()](#ALS_INT_EN)
-* [ALS_INT_with_threshold()](#ALS_INT_with_threshold)
-* [PRX_SD()](#PRX_SD)
-* [PRX_INT()](#PRX_INT)
-* [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `PRX_SD()`
@@ -440,7 +386,7 @@ vcnl4200.PRX_SD(true);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `PRX_INT()`
@@ -455,7 +401,11 @@ boolean vcnl4200.PRX_INT(VCNL4200Sensor prx_int)
 
 #### Parameters
 
-prx_int - Disable, Closing, Away, Both.
+prx_int - one of the followings:
+			PRX_INT_DISABLE
+			PRX_INT_CLOSING
+			PRX_INT_AWAY
+			PRX_INT_BOTH
 
 #### Returns
 
@@ -464,8 +414,8 @@ true on success, false on failure.
 #### Example
 
 ```
-// Enable PRX both Close and Away interrupt
-vcnl4200.ALS_INT_EN(Both);
+// Enable PRX both Closing and Away interrupt
+vcnl4200.ALS_INT_EN(vcnl4200.PRX_INT_BOTH);
 ```
 
 #### See also
@@ -481,7 +431,7 @@ vcnl4200.ALS_INT_EN(Both);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 ### `PRX_INT_with_threshold()`
@@ -523,51 +473,63 @@ vcnl4200.PRX_INT_with_threshold(50, 100);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
-### `clean_INT()`
+### `read_INT_FLAG()`
 
-Clean interrupt for VCNL4200.
+Read to clean interrupt for VCNL4200.
 
 #### Syntax 
 
 ```
-VCNL4200Sensor VCNL4200Sensor vcnl4200.clean_INT(uint8_t *flag)
+boolean vcnl4200.read_INT_FLAG(uint16_t *int_flag)
 ```
 
 #### Parameters
 
-flag - point of uint8_t, it mixes by:
+int_flag - point of uint16_t, it mixes by:
 		ALS_IF_H for ALS High threshold event.
 		ALS_IF_L for ALS High threshold event.
 		PRX_IF_CLOSE for PRX Close event.
 		PRX_IF_AWAY for PRX Away event.
+		PRX_SPFLAG for PRX enter sunlight protection.
+		PRX_UPFLAG for PRX code saturated.
 
 #### Returns
 
-ALS for interrupt from Ambient Light, PRX for interrupt from PRX, ALSPRX for both generated interrupt, None for not from  VCNL4200.
+true on success, false on failure.
 
 #### Example
 
 ```
-uint8_t flag;
-VCNL4200Sensor sensor = vcnl4200.clean_INT(&flag);
-if (sensor & ALS)
+uint16_t int_flag;
+if (vcnl4200.read_INT_FLAG(&int_flag))
 {
-  if (flag & vcnl4200.ALS_IF_L)
-    Serial.println("ALS Low threshold.");
-  if (flag & vcnl4200.ALS_IF_H)
-    Serial.println("ALS High threshold.");
-  // Re-set thresholds
-  vcnl4200.ALS_INT_with_threshold(thd_percent);
-}
-if (sensor & PRX)
-{
-  if (flag & vcnl4200.PRX_IF_CLOSE)
-    Serial.println("PRX Close event.");
-  if (flag & vcnl4200.PRX_IF_AWAY)
-    Serial.println("PRX Away event.");
+  if (int_flag & (vcnl4200.ALS_IF_L | vcnl4200.ALS_IF_H))
+  {
+    Serial.print("Lux = ");
+    Serial.print(vcnl4200.get_lux());
+    if (int_flag & vcnl4200.ALS_IF_L)
+      Serial.print("\tLow threshold.");
+    if (int_flag & vcnl4200.ALS_IF_H)
+      Serial.print("\tHigh threshold.");
+    Serial.println();
+    // Re-set thresholds
+    vcnl4200.ALS_INT_with_threshold(thd_percent);
+  }
+  if (int_flag & (vcnl4200.PRX_IF_CLOSE | vcnl4200.PRX_IF_AWAY))
+  {
+    uint16_t prx;
+    vcnl4200.read_PRX(&prx);
+    Serial.print("PRX = ");
+    Serial.print(prx);
+    if (int_flag & vcnl4200.PRX_IF_CLOSE)
+      Serial.print("\tClose event.");
+    if (int_flag & vcnl4200.PRX_IF_AWAY)
+      Serial.print("\tAway event.");
+    Serial.println();
+  }
 }
 ```
 
@@ -584,7 +546,7 @@ if (sensor & PRX)
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
 
@@ -625,6 +587,6 @@ Serial.print(vcnl4200.lens_factor);
 * [PRX_SD()](#PRX_SD)
 * [PRX_INT()](#PRX_INT)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
-* [clean_INT()](#clean_INT)
+* [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
 
