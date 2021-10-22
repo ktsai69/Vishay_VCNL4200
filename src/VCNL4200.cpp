@@ -55,38 +55,43 @@
 #define VCNL4200_PRX_IT_4T          (0x3 << VCNL4200_PRX_IT_SHIFT)
 #define VCNL4200_PRX_IT_8T          (0x4 << VCNL4200_PRX_IT_SHIFT)
 #define VCNL4200_PRX_IT_9T          (0x5 << VCNL4200_PRX_IT_SHIFT)
+#define VCNL4200_PRX_PERS_SHIFT     4
+#define VCNL4200_PRX_PERS_MASK      (0x3 << VCNL4200_PRX_PERS_SHIFT)
+#define VCNL4200_PRX_PERS_1         (0x0 << VCNL4200_PRX_PERS_SHIFT)
+#define VCNL4200_PRX_PERS_2         (0x1 << VCNL4200_PRX_PERS_SHIFT)
+#define VCNL4200_PRX_PERS_4         (0x2 << VCNL4200_PRX_PERS_SHIFT)
+#define VCNL4200_PRX_PERS_8         (0x3 << VCNL4200_PRX_PERS_SHIFT)
 #define VCNL4200_PRX_INT_SHIFT      8
 #define VCNL4200_PRX_INT_MASK       (0x3 << VCNL4200_PRX_INT_SHIFT)
-#define VCNL4200_PRX_INT_DISABLE    (Disable << VCNL4200_PRX_INT_SHIFT)
-#define VCNL4200_PRX_INT_CLOSING    (Closing << VCNL4200_PRX_INT_SHIFT)
-#define VCNL4200_PRX_INT_AWAY       (Away << VCNL4200_PRX_INT_SHIFT)
-#define VCNL4200_PRX_INT_BOTH       (Both << VCNL4200_PRX_INT_SHIFT)
+#define VCNL4200_PRX_INT_DISABLE    (PRX_INT_DISABLE << VCNL4200_PRX_INT_SHIFT)
+#define VCNL4200_PRX_INT_CLOSING    (PRX_INT_CLOSING << VCNL4200_PRX_INT_SHIFT)
+#define VCNL4200_PRX_INT_AWAY       (PRX_INT_AWAY << VCNL4200_PRX_INT_SHIFT)
+#define VCNL4200_PRX_INT_BOTH       (PRX_INT_BOTH << VCNL4200_PRX_INT_SHIFT)
 #define VCNL4200_PRX_HD             (1 << 11)
 // PRX_CONF3
 #define VCNL4200_PRX_SC_EN          (1 << 0)
 #define VCNL4200_PRX_SC_ADV         (1 << 1)
+#define VCNL4200_PRX_SMART_PERS     (1 << 4)
 #define VCNL4200_PRX_MPS_SHIFT      5
 #define VCNL4200_PRX_MPS_MASK       (0x03 << VCNL4200_PRX_MPS_SHIFT)
 #define VCNL4200_PRX_MPS_1P         (0x0 << VCNL4200_PRX_MPS_SHIFT)
 #define VCNL4200_PRX_MPS_2P         (0x1 << VCNL4200_PRX_MPS_SHIFT)
 #define VCNL4200_PRX_MPS_4P         (0x2 << VCNL4200_PRX_MPS_SHIFT)
 #define VCNL4200_PRX_MPS_8P         (0x3 << VCNL4200_PRX_MPS_SHIFT)
-// INT_FLAG
-#define VCNL4200_PRX_IF_AWAY        (1 << 8)
-#define VCNL4200_PRX_IF_CLOSE       (1 << 9)
-#define VCNL4200_ALS_IF_H           (1 << 12)
-#define VCNL4200_ALS_IF_L           (1 << 13)
-#define VCNL4200_PRX_SPFLAG         (1 << 14)
-#define VCNL4200_PRX_UPFLAG         (1 << 15)
+#define VCNL4200_PRX_SPO            (1 << 11)
+#define VCNL4200_PRX_SP             (1 << 12)
 
 // Defaults
 #define VCNL4200_DEFAULT_ALS_CONF   (VCNL4200_ALS_IT_100MS)
 #define VCNL4200_DEFAULT_ALS_THDH   0xFFFF
 #define VCNL4200_DEFAULT_ALS_THDL   0x0000
 #define VCNL4200_DEFAULT_PRX_CONF   (VCNL4200_PRX_IT_4T | \
+                                     VCNL4200_PRX_PERS_4 | \
                                      VCNL4200_PRX_HD)
 #define VCNL4200_DEFAULT_PRX_CONF3  (VCNL4200_PRX_SC_EN | \
                                      VCNL4200_PRX_SC_ADV | \
+                                     VCNL4200_PRX_SMART_PERS | \
+                                     VCNL4200_PRX_SPO | \
                                      VCNL4200_PRX_MPS_2P)
 #define VCNL4200_DEFAULT_PRX_CANC   0x0000
 #define VCNL4200_DEFAULT_PRX_THDL   0x0000
@@ -256,7 +261,7 @@ boolean VCNL4200Class::PRX_SD(boolean shutdown)
     shutdown ? VCNL4200_PRX_SD : 0);
 }
 
-boolean VCNL4200Class::PRX_INT(VCNL4200PRX_INT prx_int)
+boolean VCNL4200Class::PRX_INT(uint16_t prx_int)
 {
   return bitsUpdate(
     VCNL4200_REG_PRX_CONF,
@@ -266,41 +271,18 @@ boolean VCNL4200Class::PRX_INT(VCNL4200PRX_INT prx_int)
 
 boolean VCNL4200Class::PRX_INT_with_threshold(uint16_t thdl, uint16_t thdh)
 {
-  if (PRX_INT(Disable) &&
+  if (PRX_INT(PRX_INT_DISABLE) &&
       write(VCNL4200_REG_PRX_THDL, thdl) &&
       write(VCNL4200_REG_PRX_THDH, thdh) &&
-      PRX_INT(Both))
+      PRX_INT(PRX_INT_BOTH))
     return true;
     
   return false;
 }
 
-VCNL4200Sensor VCNL4200Class::clean_INT(uint8_t *flag)
+boolean VCNL4200Class::read_INT_FLAG(uint16_t *int_flag)
 {
-  uint16_t int_flag;
-  VCNL4200Sensor sensor = NONE;
-
-  *flag = 0;
-  if (read(VCNL4200_REG_INT_FLAG, &int_flag))
-  {
-    if (int_flag & (VCNL4200_ALS_IF_H | VCNL4200_ALS_IF_L))
-    {
-      sensor |= ALS;
-      if (int_flag & VCNL4200_ALS_IF_H)
-        *flag |= ALS_IF_H;
-      if (int_flag & VCNL4200_ALS_IF_L)
-        *flag |= ALS_IF_L;
-    }
-    if (int_flag & (VCNL4200_PRX_IF_AWAY | VCNL4200_PRX_IF_CLOSE))
-    {
-      sensor |= PRX;
-      if (int_flag & VCNL4200_PRX_IF_CLOSE)
-        *flag |= PRX_IF_CLOSE;
-      if (int_flag & VCNL4200_PRX_IF_AWAY)
-        *flag |= PRX_IF_AWAY;
-    }
-  }
-  return sensor;
+  return read(VCNL4200_REG_INT_FLAG, int_flag);
 }
 
 VCNL4200Class vcnl4200(Wire);

@@ -20,9 +20,6 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-enum VCNL4200Sensor {NONE, ALS=1, PRX=2, ALSPRX};
-enum VCNL4200PRX_INT {Disable=0, Closing, Away, Both};
-
 class VCNL4200Class {
   public:
     VCNL4200Class(TwoWire& wire);
@@ -39,16 +36,22 @@ class VCNL4200Class {
     boolean ALS_INT_EN(boolean enable);
     boolean ALS_INT_with_threshold(float percent);
     boolean PRX_SD(boolean shutdown);
-    boolean PRX_INT(VCNL4200PRX_INT prx_int);
+    boolean PRX_INT(uint16_t prx_int);
     boolean PRX_INT_with_threshold(uint16_t thdl, uint16_t thdh);
-    VCNL4200Sensor clean_INT(uint8_t *flag);
+    boolean read_INT_FLAG(uint16_t *int_flag);
     float lens_factor;
-
-    const uint8_t
-      PRX_IF_AWAY = (1 << 0),
-      PRX_IF_CLOSE = (1 << 1),
-      ALS_IF_H = (1 << 2),
-      ALS_IF_L = (1 << 3);
+    const uint16_t
+      PRX_IF_AWAY = (1 << 8),
+      PRX_IF_CLOSE = (1 << 9),
+      ALS_IF_H = (1 << 12),
+      ALS_IF_L = (1 << 13),
+      PRX_SPFLAG = (1 << 14),
+      PRX_UPFLAG = (1 << 15);
+    const uint16_t
+      PRX_INT_DISABLE = 0,
+      PRX_INT_CLOSING = 1,
+      PRX_INT_AWAY = 2,
+      PRX_INT_BOTH = 3;
     
   private:
     TwoWire* _wire;
