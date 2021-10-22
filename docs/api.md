@@ -237,7 +237,9 @@ boolean vcnl4200.ALS_SD(boolean shutdown)
 
 #### Parameters
 
-shutdown - true to Shut Down sensor, false to Power On sensor.
+shutdown
+- **true** to **Shut Down** sensor
+- **false** to **Power On** sensor.
 
 #### Returns
 
@@ -364,7 +366,9 @@ shutdown - true to Shut Down sensor, false to Power On sensor.
 
 #### Returns
 
-true on success, false on failure.
+shutdown
+- **true** to **Shut Down** sensor
+- **false** to **Power On** sensor.
 
 #### Example
 
@@ -401,7 +405,11 @@ boolean vcnl4200.PRX_INT(VCNL4200Sensor prx_int)
 
 #### Parameters
 
-prx_int - PRX_INT_DISABLE, PRX_INT_CLOSING, PRX_INT_AWAY, PRX_INT_BOTH
+prx_int
+- **PRX_INT_DISABLE** for disable proximity interrupt.
+- **PRX_INT_CLOSING** for enable closing interrupt.
+- **PRX_INT_AWAY** for enable away interrupt.
+- **PRX_INT_BOTH** for enable both closing and away interrupts.
 
 #### Returns
 
@@ -484,13 +492,13 @@ boolean vcnl4200.read_INT_FLAG(uint16_t *int_flag)
 
 #### Parameters
 
-int_flag - point of uint16_t, it mixes by:
-		ALS_IF_H for ALS High threshold event.
-		ALS_IF_L for ALS High threshold event.
-		PRX_IF_CLOSE for PRX Close event.
-		PRX_IF_AWAY for PRX Away event.
-		PRX_SPFLAG for PRX enter sunlight protection.
-		PRX_UPFLAG for PRX code saturated.
+int_flag - point of uint16_t, it mixes by:<BR>
+- **ALS_IF_H** for ALS High threshold event.<BR>
+- **ALS_IF_L** for ALS High threshold event.<BR>
+- **PRX_IF_CLOSE** for PRX Close event.<BR>
+- **PRX_IF_AWAY** for PRX Away event.<BR>
+- **PRX_SPFLAG** for PRX enter sunlight protection.<BR>
+- **PRX_UPFLAG** for PRX code saturated.<BR>
 
 #### Returns
 
