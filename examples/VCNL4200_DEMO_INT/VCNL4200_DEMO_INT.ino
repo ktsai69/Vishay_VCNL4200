@@ -17,7 +17,7 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "Vishay_VCNL4200.h"
+#include <Vishay_VCNL4200.h>
 
 const byte interruptPin = 2;
 volatile boolean interrupt_triggered = false;
