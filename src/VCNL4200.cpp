@@ -102,12 +102,12 @@ VCNL4200Class::VCNL4200Class(TwoWire& wire) :
 {
 }
 
-VCNL4200Class::~VCNL4200Class()
+VCNL4200Class::~VCNL4200Class(void)
 {
   ALS_INT_EN(false);
 }
 
-VCNL4200Class::begin()
+int VCNL4200Class::begin(void)
 {
   _wire->begin();
   slaveAddress = VCNL4200_ADDRESS;
