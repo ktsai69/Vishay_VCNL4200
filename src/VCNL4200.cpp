@@ -107,7 +107,6 @@ VCNL4200Class::VCNL4200Class(TwoWire& wire) :
 
 VCNL4200Class::~VCNL4200Class(void)
 {
-  ALS_INT_EN(false);
 }
 
 int VCNL4200Class::begin(void)
@@ -135,6 +134,14 @@ int VCNL4200Class::begin(void)
   lens_factor = 1.0;
   
   return 1;
+}
+
+void VCNL4200Class::end(void)
+{
+  ALS_INT_EN(false);
+  ALS_SD(true);
+  PRX_INT(false);
+  PRX_SD(true);
 }
 
 boolean VCNL4200Class::read(uint8_t reg, uint16_t *data)
