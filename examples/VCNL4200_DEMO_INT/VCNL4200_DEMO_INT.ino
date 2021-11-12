@@ -29,6 +29,11 @@ float thd_percent = 10.0f;
 uint16_t prx_away_threshold = 40;
 uint16_t prx_close_threshold = 50;
 
+void isr()
+{
+  interrupt_triggered = true;  
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -41,6 +46,39 @@ void setup()
     while(1);
   }
 
+  // Set IR LED current to 100mA
+  vcnl4200.set_PRX_LED_I(vcnl4200.PRX_LED_I_100mA);
+
+  // Get the IR LED current
+  Serial.print("PRX_LED_I: ");
+  switch(vcnl4200.get_PRX_LED_I())
+  {
+    case VCNL4200Class::PRX_LED_I_50mA:
+      Serial.println("50mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_75mA:
+      Serial.println("75mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_100mA:
+      Serial.println("100mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_120mA:
+      Serial.println("120mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_140mA:
+      Serial.println("140mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_160mA:
+      Serial.println("160mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_180mA:
+      Serial.println("180mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_200mA:
+      Serial.println("200mA");
+      break;
+  }
+
   // Initial interrupt
   pinMode(interruptPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(interruptPin), isr, FALLING);
@@ -50,11 +88,6 @@ void setup()
   vcnl4200.PRX_INT_with_threshold(prx_away_threshold, prx_close_threshold);
 
   Serial.println("VCNL4200 ALS and PRX sensor");
-}
-
-void isr()
-{
-  interrupt_triggered = true;  
 }
 
 void loop()

@@ -30,6 +30,10 @@ void setup()
     Serial.println("Failed to initialize vcnl4200");
     while(1);
   }
+  
+  // Set IR LED current to 100mA
+  vcnl4200.set_PRX_LED_I(vcnl4200.PRX_LED_I_100mA);
+
   Serial.println("PRX\tLux");
 }
 

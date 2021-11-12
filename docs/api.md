@@ -44,6 +44,8 @@ if (!vcnl4200.begin()) {
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `end()`
 
@@ -92,6 +94,8 @@ vcnl4200.end();
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `read_PRX()`
 
@@ -136,6 +140,8 @@ if (vcnl4200.read_PRX(&prx))
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `read_ALS()`
 
@@ -180,6 +186,8 @@ if (vcnl4200.read_ALS(&als))
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `get_lux()`
 
@@ -224,6 +232,8 @@ if (lux >= 0)
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `ALS_SD()`
 
@@ -267,6 +277,8 @@ vcnl4200.ALS_SD(false);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `ALS_INT_EN()`
 
@@ -308,6 +320,8 @@ vcnl4200.ALS_INT_EN(true);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `ALS_INT_with_threshold()`
 
@@ -349,6 +363,8 @@ vcnl4200.ALS_INT_with_threshold(3.0f);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `PRX_SD()`
 
@@ -363,12 +379,12 @@ boolean vcnl4200.PRX_SD(boolean shutdown)
 #### Parameters
 
 shutdown - true to Shut Down sensor, false to Power On sensor.
+- **true** to **Shut Down** sensor
+- **false** to **Power On** sensor.
 
 #### Returns
 
-shutdown
-- **true** to **Shut Down** sensor
-- **false** to **Power On** sensor.
+true on success, false on failure.
 
 #### Example
 
@@ -392,6 +408,8 @@ vcnl4200.PRX_SD(true);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `PRX_INT()`
 
@@ -437,6 +455,8 @@ vcnl4200.ALS_INT_EN(vcnl4200.PRX_INT_BOTH);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `PRX_INT_with_threshold()`
 
@@ -479,6 +499,8 @@ vcnl4200.PRX_INT_with_threshold(50, 100);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 ### `read_INT_FLAG()`
 
@@ -552,6 +574,8 @@ if (vcnl4200.read_INT_FLAG(&int_flag))
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 
 
 ### `lens_factor`
@@ -593,4 +617,134 @@ Serial.print(vcnl4200.lens_factor);
 * [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
 * [read_INT_FLAG()](#read_INT_FLAG)
 * [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
+
+### `set_PRX_LED_I()`
+
+Set IR LED current.
+
+#### Syntax 
+
+```
+boolean vcnl4200.set_PRX_LED_I(PRX_LED_I_t led_i)
+```
+
+#### Parameters
+
+led_i - it mixes by:<BR>
+- **PRX_LED_I_50mA** 50mA<BR>
+- **PRX_LED_I_75mA** 75mA<BR>
+- **PRX_LED_I_100mA** 100mA<BR>
+- **PRX_LED_I_120mA** 120mA<BR>
+- **PRX_LED_I_140mA** 140mA<BR>
+- **PRX_LED_I_160mA** 160mA<BR>
+- **PRX_LED_I_180mA** 180mA<BR>
+- **PRX_LED_I_200mA** 200mA<BR>
+
+#### Returns
+
+true on success, false on failure.
+
+#### Example
+
+```
+  // Set IR LED to 100mA current
+  vcnl4200.set_PRX_LED_I(vcnl4200.PRX_LED_100mA));
+```
+
+#### See also
+
+* [begin()](#begin)
+* [end()](#end)
+* [read_PRX()](#read_PRX)
+* [read_ALS()](#read_ALS)
+* [get_lux()](#get_lux)
+* [ALS_SD()](#ALS_SD)
+* [ALS_INT_EN()](#ALS_INT_EN)
+* [ALS_INT_with_threshold()](#ALS_INT_with_threshold)
+* [PRX_SD()](#PRX_SD)
+* [PRX_INT()](#PRX_INT)
+* [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
+* [read_INT_FLAG()](#read_INT_FLAG)
+* [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
+
+### `get_PRX_LED_I()`
+
+Get the setting of IR LED current.
+
+#### Syntax 
+
+```
+VCNL4200Class::PRX_LED_I_t vcnl4200.get_PRX_LED_I()
+```
+
+#### Parameters
+
+None.
+
+#### Returns
+
+- **PRX_LED_I_50mA** 50mA<BR>
+- **PRX_LED_I_75mA** 75mA<BR>
+- **PRX_LED_I_100mA** 100mA<BR>
+- **PRX_LED_I_120mA** 120mA<BR>
+- **PRX_LED_I_140mA** 140mA<BR>
+- **PRX_LED_I_160mA** 160mA<BR>
+- **PRX_LED_I_180mA** 180mA<BR>
+- **PRX_LED_I_200mA** 200mA<BR>
+
+#### Example
+
+```
+  // Get the IR LED current
+  Serial.print("PRX_LED_I: ");
+  switch(vcnl4200.get_PRX_LED_I())
+  {
+    case VCNL4200Class::PRX_LED_I_50mA:
+      Serial.println("50mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_75mA:
+      Serial.println("75mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_100mA:
+      Serial.println("100mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_120mA:
+      Serial.println("120mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_140mA:
+      Serial.println("140mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_160mA:
+      Serial.println("160mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_180mA:
+      Serial.println("180mA");
+      break;
+    case VCNL4200Class::PRX_LED_I_200mA:
+      Serial.println("200mA");
+      break;
+  }
+```
+
+#### See also
+
+* [begin()](#begin)
+* [end()](#end)
+* [read_PRX()](#read_PRX)
+* [read_ALS()](#read_ALS)
+* [get_lux()](#get_lux)
+* [ALS_SD()](#ALS_SD)
+* [ALS_INT_EN()](#ALS_INT_EN)
+* [ALS_INT_with_threshold()](#ALS_INT_with_threshold)
+* [PRX_SD()](#PRX_SD)
+* [PRX_INT()](#PRX_INT)
+* [PRX_INT_with_threshold()](#PRX_INT_with_threshold)
+* [read_INT_FLAG()](#read_INT_FLAG)
+* [lens_factor](#lens_factor)
+* [set_PRX_LED_I()](#set_PRX_LED_I)
+* [get_PRX_LED_I()](#get_PRX_LED_I)
 

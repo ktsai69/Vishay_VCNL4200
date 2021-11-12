@@ -78,6 +78,9 @@
 #define VCNL4200_PRX_MPS_2P         (0x1 << VCNL4200_PRX_MPS_SHIFT)
 #define VCNL4200_PRX_MPS_4P         (0x2 << VCNL4200_PRX_MPS_SHIFT)
 #define VCNL4200_PRX_MPS_8P         (0x3 << VCNL4200_PRX_MPS_SHIFT)
+#define VCNL4200_PRX_LED_I_SHIFT    8
+#define VCNL4200_PRX_LED_I_MASK     (0x07 << VCNL4200_PRX_LED_I_SHIFT)
+
 #define VCNL4200_PRX_SPO            (1 << 11)
 #define VCNL4200_PRX_SP             (1 << 12)
 
@@ -283,6 +286,22 @@ boolean VCNL4200Class::PRX_INT_with_threshold(uint16_t thdl, uint16_t thdh)
 boolean VCNL4200Class::read_INT_FLAG(uint16_t *int_flag)
 {
   return read(VCNL4200_REG_INT_FLAG, int_flag);
+}
+
+boolean VCNL4200Class::set_PRX_LED_I(PRX_LED_I_t led_i)
+{
+  return bitsUpdate(
+    VCNL4200_REG_PRX_CONF3,
+    ~VCNL4200_PRX_LED_I_MASK,
+    led_i << VCNL4200_PRX_LED_I_SHIFT);
+}
+
+VCNL4200Class::PRX_LED_I_t VCNL4200Class::get_PRX_LED_I(void)
+{
+  uint16_t conf3; 
+  read(VCNL4200_REG_PRX_CONF3, &conf3);
+  return (PRX_LED_I_t)(
+    (conf3 & VCNL4200_PRX_LED_I_MASK) >> VCNL4200_PRX_LED_I_SHIFT);
 }
 
 VCNL4200Class vcnl4200(Wire);
