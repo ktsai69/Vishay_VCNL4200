@@ -27,8 +27,8 @@ class VCNL4200Class {
 
     int begin();
     void end();
-    boolean read(uint8_t reg, uint16_t *data);
-    boolean write( uint8_t reg, uint16_t data);
+    boolean readWord(uint8_t reg, uint16_t *data);
+    boolean writeWord( uint8_t reg, uint16_t data);
     virtual boolean read_PRX(uint16_t *prx);
     virtual boolean read_ALS(uint16_t *als);
     virtual float get_lux(void);
